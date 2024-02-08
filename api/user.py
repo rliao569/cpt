@@ -1,9 +1,12 @@
 import json, jwt
-from flask import Blueprint, request, jsonify, current_app, Response
+from flask import Blueprint, request, jsonify,  make_response, Response, current_app
 from flask_restful import Api, Resource # used for REST API building
-from datetime import datetime
+from flask_login import login_user, logout_user, current_user, login_required
+from werkzeug.security import check_password_hash
+from flask_cors import CORS
 from auth_middleware import token_required
-
+from werkzeug.security import generate_password_hash
+from datetime import datetime
 from model.users import User
 
 user_api = Blueprint('user_api', __name__,
@@ -62,6 +65,21 @@ class UserAPI:
             json_ready = [user.read() for user in users]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
     
+    class _Create(Resource):
+        def post(self):
+            body = request.get_json()
+            # Fetch data from the form
+            name = body.get('name')
+            uid = body.get('uid')
+            password = body.get('password')
+            life = body.get('life')
+            if uid is not None:
+                new_user = User(name=name, uid=uid, password=password, life=life)
+            user = new_user.create()
+            if user:
+                return user.read()
+            return {'message': f'Processed {name}, either a format error or User ID {uid} is duplicate'}, 400
+                    
     class _Security(Resource):
         def post(self):
             try:
@@ -116,9 +134,30 @@ class UserAPI:
                         "error": str(e),
                         "data": None
                 }, 500
+            
+    class Login(Resource):
+        def post(self):
+            data = request.get_json()
+            uid = data.get('uid')
+            password = data.get('password')
+            if not uid or not password:
+                response = {'message': 'Invalid creds'}
+                return make_response(jsonify(response), 401)
+            user = User.query.filter_by(_uid=uid).first()
+            if user and user.is_password(password):
+                response = {
+                    'message': 'Logged in successfully',
+                    'user': {
+                        'name': user.name,
+                        'id': user.id
+                    }
+                }
+
 
             
     # building RESTapi endpoint
+    api.add_resource(_Create, '/create')
+    api.add_resource(Login, '/login')
     api.add_resource(_CRUD, '/')
     api.add_resource(_Security, '/authenticate')
     

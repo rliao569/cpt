@@ -1,10 +1,11 @@
-{% extends "layouts/base.html" %}
+<!-- Extending the project layout, as this file will do minor customizations -->
+{% extends "layouts/project.html" %}
 
-<!-- 
-A simple HTML login form with a Login action when button is pressed.  
+<!-- Setting up variables to customize "project" details to be specific to index page -->
+{% set project = "Portfolio" %}
+{% set overview = "https://nighthawkcodingsociety.com/projectsearch/details/Flask%20Portfolio%20Starter" %}
+{% set repo = "https://github.com/nighthawkcoders/flask_portfolio/" %}
 
-The form triggers the login_user function defined in the JavaScript below when the Login button is pressed.
--->
 <form action="javascript:login_user()">
     <p><label>
         User ID:

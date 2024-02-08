@@ -78,14 +78,16 @@ class User(db.Model):
     _uid = db.Column(db.String(255), unique=True, nullable=False)
     _password = db.Column(db.String(255), unique=False, nullable=False)
     _dob = db.Column(db.Date)
+    _life = db.Column(db.String(255), default="tester", nullable=False)
     
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
     posts = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
 
     # constructor of a User object, initializes the instance variables within object (self)
-    def __init__(self, name, uid, password="123qwerty", dob=date.today()):
+    def __init__(self, name, uid, password="123qwerty", dob=date.today(), life="random"):
         self._name = name    # variables with self prefix become part of the object, 
         self._uid = uid
+        self._life = life
         self.set_password(password)
         self._dob = dob
 
@@ -112,6 +114,16 @@ class User(db.Model):
     # check if uid parameter matches user id in object, return boolean
     def is_uid(self, uid):
         return self._uid == uid
+    
+    # a name getter method, extracts name from object
+    @property
+    def life(self):
+        return self._life
+    
+    # a setter function, allows name to be updated after initial object creation
+    @life.setter
+    def life(self, life):
+        self._life = life
     
     @property
     def password(self):
@@ -168,6 +180,7 @@ class User(db.Model):
             "id": self.id,
             "name": self.name,
             "uid": self.uid,
+            "life": self.life,
             "dob": self.dob,
             "age": self.age,
             "posts": [post.read() for post in self.posts]
@@ -203,7 +216,7 @@ def initUsers():
         """Create database and tables"""
         db.create_all()
         """Tester data for table"""
-        u1 = User(name='Thomas Edison', uid='toby', password='123toby', dob=date(1847, 2, 11))
+        u1 = User(name='Thomas Edison', uid='toby', password='123toby', dob=date(1847, 2, 11), life='plumber')
         u2 = User(name='Nicholas Tesla', uid='niko', password='123niko', dob=date(1856, 7, 10))
         u3 = User(name='Alexander Graham Bell', uid='lex')
         u4 = User(name='Grace Hopper', uid='hop', password='123hop', dob=date(1906, 12, 9))
