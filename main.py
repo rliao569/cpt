@@ -15,7 +15,8 @@ from api.player import player_api
 # database migrations
 from model.users import initUsers
 from model.players import initPlayers
-
+# Import your API blueprints
+from api.comments import comments_api
 # setup App pages
 from projects.projects import app_projects # Blueprint directory import projects definition
 
@@ -27,6 +28,7 @@ db.init_app(app)
 app.register_blueprint(user_api) # register api routes
 app.register_blueprint(player_api)
 app.register_blueprint(app_projects) # register app pages
+app.register_blueprint(comments_api)
 
 @app.errorhandler(404)  # catch for URL not found
 def page_not_found(e):

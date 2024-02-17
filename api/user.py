@@ -83,6 +83,7 @@ class UserAPI:
     class _Security(Resource):
         def post(self):
             try:
+                current_app.logger.info("Hello")
                 body = request.get_json()
                 if not body:
                     return {
@@ -98,6 +99,7 @@ class UserAPI:
                 
                 ''' Find user '''
                 user = User.query.filter_by(_uid=uid).first()
+                current_app.logger.info(f"The user is {user}")
                 if user is None or not user.is_password(password):
                     return {'message': f"Invalid user id or password"}, 400
                 if user:
@@ -108,12 +110,14 @@ class UserAPI:
                             algorithm="HS256"
                         )
                         resp = Response("Authentication for %s successful" % (user._uid))
+                        resp.headers.add('Access-Control-Allow-Origin', 'http://localhost:4100')
+                        resp.headers.add('Access-Control-Allow-Credentials', 'true')
                         resp.set_cookie("jwt", token,
                                 max_age=3600,
                                 secure=True,
                                 httponly=True,
                                 path='/',
-                                samesite='None'  # This is the key part for cross-site requests
+                                samesite='Strict'  # This is the key part for cross-site requests
 
                                 # domain="frontend.com"
                                 )
