@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Comments</title>
+</head>
+<body>
+    <h1>Restaurant Comments</h1>
+    
+    <h2>Submit a Comment</h2>
+    <form id="commentForm">
+        <label for="restaurant">Restaurant:</label>
+        <input type="text" id="restaurant" name="restaurant" required><br><br>
+        
+        <label for="rating">Rating (1-10):</label>
+        <input type="number" id="rating" name="rating" min="1" max="10" required><br><br>
+        
+        <button type="submit">Submit Comment</button>
+    </form>
+    
+    <h2>Comments</h2>
+    <table id="commentTable" border="1">
+        <thead>
+            <tr>
+                <th>UID</th>
+                <th>Restaurant</th>
+                <th>Rating</th>
+            </tr>
+        </thead>
+        <tbody id="commentBody">
+            <!-- Comments will be displayed here -->
+        </tbody>
+    </table>
+    
+    <script>
+        // Function to get UID from JWT cookie and store in localStorage
+        function storeUidInLocalStorage() {
+            const cookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('jwt='));
+
+            if (!cookie) {
+                return;
+            }
+
+            const token = cookie.split('=')[1];
+            const tokenPayload = token.split('.')[1];
+            const decodedPayload = atob(tokenPayload);
+            const { _uid } = JSON.parse(decodedPayload);
+
+            localStorage.setItem('uid', _uid);
+        }
+
+        // Function to retrieve UID from localStorage
+        function getUidFromLocalStorage() {
+            return localStorage.getItem('uid');
+        }
+
+        // Call function to store UID in localStorage when page loads
+        storeUidInLocalStorage();
+
+        // Function to handle comment submission
+        document.getElementById('commentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Get UID from localStorage
+            const uid = getUidFromLocalStorage();
+            if (!uid) {
+                alert('User not logged in!');
+                return;
+            }
+            
+            // Get restaurant name and rating from form
+            const restaurant = document.getElementById('restaurant').value.trim();
+            const rating = parseInt(document.getElementById('rating').value);
+            
+            // Append new comment to the table
+            const commentTable = document.getElementById('commentBody');
+            const newRow = commentTable.insertRow();
+            newRow.innerHTML = `<td>${uid}</td><td>${restaurant}</td><td>${rating}</td>`;
+            
+            // Clear form fields
+            document.getElementById('restaurant').value = '';
+            document.getElementById('rating').value = '';
+        });
+    </script>
+</body>
+</html>

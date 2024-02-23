@@ -83,7 +83,7 @@ class UserAPI:
     class _Security(Resource):
         def post(self):
             try:
-                current_app.logger.info("Hello")
+                current_app.logger.info("your code may have worked. finally...")
                 body = request.get_json()
                 if not body:
                     return {
@@ -114,10 +114,8 @@ class UserAPI:
                         resp.headers.add('Access-Control-Allow-Credentials', 'true')
                         resp.set_cookie("jwt", token,
                                 max_age=3600,
-                                secure=True,
-                                httponly=True,
                                 path='/',
-                                samesite='Strict'  # This is the key part for cross-site requests
+                                samesite='Lax'  # This is the key part for cross-site requests
 
                                 # domain="frontend.com"
                                 )

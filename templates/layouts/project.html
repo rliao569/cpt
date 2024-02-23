@@ -1,129 +1,69 @@
-{% extends "layouts/base.html" %}
-<!-- Custom block for standardizing Project Data-->
 
-{% block style %}
-    :root{
-        --white: whitesmoke;
-        --black: black;
-        --grey: grey;
-    }
-
-    html, body{
-        margin: 0;
-        height: 100%;
-        animation: fadein 2s;
-        -moz-animation: fadein 2s; /* Firefox */
-        -webkit-animation: fadein 2s; /* Safari and Chrome */
-        -o-animation: fadein 2s; /* Opera */
-        background-color: var(--grey);
-        color: var(--white);
-    }
-
-    .dark-mode {
-        background-color: var(--white);
-        color: var(--black);
-    }
-
-    h1{
-        font-size: 5em;
-    }
-
-    a {
-        color: midnightblue;
-    }
-
-    .fa{
-        font-size: 3em;
-        letter-spacing: 1em;
-        transition: all .2s;
-        color: white;
-    }
-
-    .fa:hover{
-        transform: translateY(10px);
-    }
-
-    .fa-youtube-play:hover{
-        color: #cc0000;
-    }
-
-    .fa-twitter:hover{
-        color: #1da1f2;
-    }
-
-    .fa-github:hover{
-        color: #000000;
-    }
-
-    .btn:link,
-    .btn:visited {
-        text-transform: uppercase;
-        text-decoration: none;
-        padding: 15px 40px;
-        display: inline-block;
-        border-radius: 100px;
-        transition: all .2s;
-        position: absolute;
-        color: white;
-        font-size: 2.5em;
-    }
-
-    .btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 20px 40px rgba(255, 255, 255, 0.2);
-    }
-
-    .btn:active {
-        transform: translateY(-1px);
-        box-shadow: 0 5px 10px rgba(255, 255, 255, 0.2);
-    }
-
-    .row{
-        margin: auto;
-    }
-{% endblock %}
-
-{% block body %}
-<div class="container-fluid">
-    <div class="row justify-content-end" style="padding: 2%;">
-        <div class="col-2" style="text-align: right;">
-            {% block info %}
-                <!-- notice jinja style variables used in href's -->
-                <a><h5>{{basename}}</h5></a>
-                <a href={{github}} target="_blank"><i class="fa fa-github"></i></a>
-                <a href={{youtube}} target="_blank"><i class="fa fa-youtube-play"></i></a>
-                <a href={{twitter}} target="_blank"><i class="fa fa-twitter"></i></a>
-            {% endblock %}
-        </div>
-    </div>
-
-    <div class="product" style="margin-top: 2%;">
-        <div class="row" style="padding: 10%; padding-top: 0%; padding-bottom: 5%;">
-
-            <div class="col-8" >
-                <h1>{{ project }} Project</h1>
-            </div>
-
-        </div>
-
-        <div class="row" style="padding-left: 10%;">
-            <div class="col-3">
-                <a href="{{ overview }}" class="btn">Overview</a>
-            </div>
-        
-            <div class="col-3">
-                <a href="{{ scrumboard }}" class="btn">Scrum Board</a>
-            </div>
-        
-            <div class="col-3">
-                <a href="{{ repo }}" class="btn">Repository</a>
-            </div>
-        
-            <div class="col-3">
-                <a href="{{ authors }}" class="btn">Authors</a>
-            </div>
-        </div>
-
-    </div>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<div class="form-container">
+    <h2 id="pageTitle">Login</h2>
+    <form>
+        <input type="text" id="name" class="input" placeholder="Full Name"><br>
+        <input type="text" id="user" class="input" placeholder="Username"><br>
+        <input type="password" id="pass" class="input" placeholder="Password">
+    </form>
+    <button class="submit" onclick="login()">Log In</button>
+    <p id="error"></p>
+    <button onclick="switchToSignup()">Switch to Signup</button>
 </div>
-{% endblock %}
+<script>
+function switchToSignup() {
+    window.location.href = "200FULLBOXEDPIECED";
+}
+function login() {
+    data = {
+        "name": document.getElementById("name").value,
+        "uid": document.getElementById("user").value,
+        "password": document.getElementById("pass").value,
+    }
+    options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify(data),
+        credentials: 'include'
+    }
+    fetch('http://127.0.0.1:8888/api/users/authenticate', options)
+    .then(response => {
+        if (response.ok) {
+            // Handle successful login
+            const headers = response.headers;
+            const headerEntries = [...headers.entries()]
+            console.log('Response Headers:', headerEntries)
+            console.log('All Cookies:', document.cookie);
+            document.getElementById("error").innerHTML = ""
+            const jwtCookie = getCookie('jwt');
+            if (jwtCookie) {
+                console.log('JWT Token:', jwtCookie);
+            } else {
+                console.log('JWT Token not found');
+            }
+            // Redirect to the desired page after successful login
+            window.location.href = "http://127.0.0.1:8888/projects/commentsreal/";
+        }
+        else {
+            // Handle incorrect login information
+            document.getElementById("error").innerHTML = "Incorrect Login Information";
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+}
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+</script>
+</html>
