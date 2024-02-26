@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Api, Resource
 from flask_login import login_required
 from werkzeug.security import check_password_hash
-from model.models import Comment
+from model.comment import Comment
 from __init__ import db, app
 
 comments_api = Blueprint('comments_api', __name__, url_prefix='/api/comments')
@@ -17,7 +17,7 @@ class CommentAPI(Resource):
             # Fetch comments from the database
             comments = Comment.query.all()
             # Convert comments to JSON-ready format
-            json_ready = [{'id': comment.id, 'text': comment.text} for comment in comments]
+            json_ready = [{'UID': comment.uid, 'Restaurant': comment.restaurant, 'Rating': comment.rating} for comment in comments]
             return jsonify(json_ready), 200
         except Exception as e:
             return {'message': 'Failed to fetch comments', 'error': str(e)}, 500
