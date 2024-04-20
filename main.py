@@ -15,6 +15,7 @@ from api.player import player_api
 # database migrations
 from model.users import initUsers
 from model.players import initPlayers
+from model.comment import initComments
 # Import your API blueprints
 from api.comments import comments_api
 # setup App pages
@@ -58,6 +59,7 @@ custom_cli = AppGroup('custom', help='Custom commands')
 def generate_data():
     initUsers()
     initPlayers()
+    initComments()
 
 # Register the custom command group with the Flask application
 app.cli.add_command(custom_cli)

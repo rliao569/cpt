@@ -62,7 +62,7 @@ class Post(db.Model):
             "image": self.image,
             "base64": str(file_encode)
         }
-
+    
 
 # Define the User class to manage actions in the 'users' table
 # -- Object Relational Mapping (ORM) is the key concept of SQLAlchemy
@@ -176,7 +176,7 @@ class User(db.Model):
     # CRUD read converts self to dictionary
     # returns dictionary
     def read(self):
-        return {
+        object = {
             "id": self.id,
             "name": self.name,
             "uid": self.uid,
@@ -185,6 +185,7 @@ class User(db.Model):
             "age": self.age,
             "posts": [post.read() for post in self.posts]
         }
+        return object
 
     # CRUD update: updates user name, password, phone
     # returns self
@@ -220,7 +221,8 @@ def initUsers():
         u2 = User(name='Nicholas Tesla', uid='niko', password='123niko', dob=date(1856, 7, 10))
         u3 = User(name='Alexander Graham Bell', uid='lex')
         u4 = User(name='Grace Hopper', uid='hop', password='123hop', dob=date(1906, 12, 9))
-        users = [u1, u2, u3, u4]
+        u5 = User(name='test', uid='test', password='test123', dob=date(2024, 4, 16))
+        users = [u1, u2, u3, u4, u5]
 
         """Builds sample user/note(s) data"""
         for user in users:
