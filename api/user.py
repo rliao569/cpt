@@ -64,6 +64,27 @@ class UserAPI:
             users = User.query.all()    # read/extract all users from database
             json_ready = [user.read() for user in users]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
+        
+        @token_required
+        def put(self, current_user):
+            body = request.get_json() # get the body of the request
+            token = request.cookies.get("jwt")
+            cur_user = jwt.decode(token, current_app.config["SECRET_KEY"], algorithms=["HS256"])['_uid']
+            uid = body.get('uid')
+            name = body.get('name')
+            password = body.get('password')
+            users = User.query.all()
+            for user in users:
+                if user.uid == cur_user:
+                    if uid == None:
+                        uid = user.uid
+                    if name == None:
+                        name = user.name
+                    if password == None:
+                        password = user.password
+                    user.update(name,uid,password)
+                    
+            return f"{user.read()} Updated"
     
     class _Create(Resource):
         def post(self):
