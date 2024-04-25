@@ -29,12 +29,13 @@ class Comment(db.Model):
 
     # CRUD read, returns dictionary representation of Comment object
     def read(self):
-        return {
+        var_comment = {
             "id": self.id,
             "uid": self.uid,
             "restaurant": self.restaurant,
             "rating": self.rating
         }
+        return var_comment
 
     # CRUD delete: remove self
     def delete(self):
@@ -45,24 +46,24 @@ class Comment(db.Model):
 def initComments():
     db.create_all()
     comment1 = Comment(
-        uid="test1",
-        restaurant="test2",
-        rating="test1"
+        uid="Ben",
+        restaurant="Chi-Fil-A",
+        rating="9"
     )
     comment2 = Comment(
-        uid="test1",
-        restaurant="test2",
-        rating="test1"
+        uid="Caley",
+        restaurant="In-N-OUT",
+        rating="7"
     )
     comment3 = Comment(
-        uid="test1",
-        restaurant="test2",
-        rating="test1"
+        uid="Jason",
+        restaurant="Panera",
+        rating="3"
     )
     comment4 = Comment(
-        uid="test1",
-        restaurant="test2",
-        rating="test1"
+        uid="William",
+        restaurant="Chipolte",
+        rating="8"
     )
     comments=[comment1,comment2,comment3,comment4]
     for comment in comments:

@@ -217,11 +217,11 @@ def initUsers():
         """Create database and tables"""
         db.create_all()
         """Tester data for table"""
-        u1 = User(name='Thomas Edison', uid='toby', password='123toby', dob=date(1847, 2, 11), life='plumber')
-        u2 = User(name='Nicholas Tesla', uid='niko', password='123niko', dob=date(1856, 7, 10))
-        u3 = User(name='Alexander Graham Bell', uid='lex')
-        u4 = User(name='Grace Hopper', uid='hop', password='123hop', dob=date(1906, 12, 9))
-        u5 = User(name='test', uid='test', password='test123', dob=date(2024, 4, 16))
+        u1 = User(name='Roger Federer', uid='Federer', password='tennis123', dob=date(1996, 7, 4), life='plumber')
+        u2 = User(name='Tony Stark', uid='Ironman', password='123fire', dob=date(1856, 7, 10))
+        u3 = User(name='Christine', uid='Chris', password='123live')
+        u4 = User(name='Kobe Bryant', uid='Kobe', password='123basketball', dob=date(1906, 12, 9))
+        u5 = User(name='Mario', uid='Mario', password='super22', dob=date(2024, 4, 16))
         users = [u1, u2, u3, u4, u5]
 
         """Builds sample user/note(s) data"""
